@@ -1,17 +1,23 @@
-import {
-  Flex,
-  Heading,
-  Input,
-  Button,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
 import type { NextPage } from "next";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 import Head from "next/head";
+import { Box, Flex } from "@chakra-ui/layout";
 import Navbar from "../components/Navbar";
+import { Grid, Spinner } from "@chakra-ui/react";
+import HomeCard from "../components/HomeCard";
 
 const Home: NextPage = () => {
-  const formBackground = useColorModeValue("gray.100", "gray.700");
+  const [pokemon, setPokemon] = useState<any>({});
+  useEffect(() => {
+    axios
+      .get("https://pokeapi.co/api/v2/pokemon")
+      .then((res) => {
+        setPokemon(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <div>
@@ -21,45 +27,26 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-
-      <Flex height="100vh" alignItems="center" justifyContent="center">
-        <Flex direction="column" bg={formBackground} p={12} rounded={8}>
-          <Heading textAlign="center" color="telegram.400" mb={6}>
-            Login
-          </Heading>
-          <Input
-            placeholder="gameshop@mail.com"
-            variant="filled"
-            mb={3}
-            type="email"
-          />
-          <Input
-            placeholder="********"
-            variant="filled"
-            mb={6}
-            type="password"
-          />
-          <Button
-            bg="telegram.400"
-            color="white"
-            _hover={{ bg: "telegram.600" }}
-            mb={3}
-          >
-            Submit
-          </Button>
-          <Flex justifyContent="space-around">
-            <Text
-              textAlign="center"
-              color="telegram.400"
-              cursor="pointer"
-              fontWeight="semibold"
-              _hover={{ color: "telegram.600" }}
-            >
-              Sign up
-            </Text>
+      <Box mt={10} mx="auto" boxSize="xl" width="80%">
+        {!pokemon.results ? (
+          <Flex justifyContent="center" alignItems="center">
+            <Spinner color="telegram.600" size="xl" />
           </Flex>
-        </Flex>
-      </Flex>
+        ) : (
+          <Grid
+            templateColumns={{
+              xl: "repeat(5, 1fr)",
+              sm: "repeat(3, 1fr)",
+              lg: "repeat(4, 1fr)",
+            }}
+            gap={8}
+          >
+            {pokemon.results.map((item: any, index: number) => {
+              return <HomeCard pokemon={item} key={index} />;
+            })}
+          </Grid>
+        )}
+      </Box>
     </div>
   );
 };

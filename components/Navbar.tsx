@@ -10,9 +10,9 @@ export default function Navbar() {
       <Spacer />
       <Button onClick={toggleColorMode}>
         {colorMode === "dark" ? (
-          <MoonIcon color="telegram.400" />
-        ) : (
           <SunIcon color="telegram.400" />
+        ) : (
+          <MoonIcon color="telegram.400" />
         )}
       </Button>
     </Flex>
