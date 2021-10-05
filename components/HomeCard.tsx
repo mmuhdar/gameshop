@@ -1,30 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import Link from "next/link";
 import { Box, Flex, Text, Image, useColorModeValue } from "@chakra-ui/react";
-import axios from "axios";
 
-export default function HomeCard({ pokemon }: any) {
-  const [detail, setDetail] = useState<any>({});
-  useEffect(() => {
-    axios
-      .get(`${pokemon.url}`)
-      .then(({ data }) => {
-        setDetail(data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
+export default function HomeCard({ game }: any) {
   const cardBackground = useColorModeValue("gray.200", "gray.700");
+  const link = `/checkout/${game.id}`;
 
   return (
-    <Flex direction="column">
-      <Box bg={cardBackground} p={3} rounded="xl">
-        <Image
-          objectFit="cover"
-          src={detail?.sprites?.other["official-artwork"].front_default}
-        />
-      </Box>
+    <Flex direction="column" justifyContent="space-between">
+      <Link href={link}>
+        <Box bg={cardBackground} p={1} rounded="xl" cursor="pointer">
+          <Image objectFit="cover" rounded="lg" src={game.imageURL} />
+        </Box>
+      </Link>
       <Text mt={3} textAlign="center" fontWeight="bold">
-        {detail.name}
+        {game.name}
       </Text>
     </Flex>
   );
